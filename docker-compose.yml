@@ -1,17 +1,47 @@
 version: "3.9"
+
 services:
-  backend:
-    build: ./backend
-    container_name: farm93-backend
+  mongo:
+    image: mongo:6
+    container_name: mongo
     restart: always
     ports:
-      - "3000:3000"
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  backend:
+    build:
+      context: ./backend
+    container_name: farm93-backend
+    restart: always
     env_file:
       - ./backend/.env
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongo
 
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
     container_name: farm93-frontend
     restart: always
     ports:
+      - "8080:80"
+
+  nginx:
+    image: nginx:alpine
+    container_name: farm93-nginx
+    restart: always
+    ports:
       - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - frontend
+      - backend
+
+volumes:
+  mongo_data:
