@@ -14,7 +14,7 @@ app.use(express.urlencoded({extended:true}));
 app.use(cookieParser());
 
 const corsOptions = {
-    origin:'http://localhost:5173',
+    origin: ["https://farm93.com", "https://www.farm93.com"],
     credentials:true
 }
 const PORT = process.env.PORT || 4000;
