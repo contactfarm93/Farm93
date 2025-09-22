@@ -30,7 +30,7 @@ const trainingSlice=createSlice({
 
 export const trainingForm=(formData)=>(dispatch)=>{
     dispatch(trainingSlice.actions.createTrainingStart());
-    return axios.post(`${process.env.REACT_APP_API_URL}/training/train`,formData,{
+    return axios.post(`${import.meta.env.VITE_API_URL}/training/train`,formData,{
         headers:{
             "Content-Type": "application/json",
         },

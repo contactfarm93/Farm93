@@ -79,7 +79,7 @@ const blogSlice = createSlice({
 export const createBlog = (formData) => (dispatch) => {
   dispatch(blogSlice.actions.createBlogStart());
   return axios
-    .post(`${process.env.REACT_APP_API_URL}/blog/create-blog`, formData, {
+    .post(`${import.meta.env.VITE_API_URL}/blog/create-blog`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -95,7 +95,7 @@ export const createBlog = (formData) => (dispatch) => {
 export const getBlogBySlug = (slug) => (dispatch) => {
   dispatch(blogSlice.actions.getBlogBySlugStart());
   return axios
-    .get(`${process.env.REACT_APP_API_URL}/blog/${slug}`, {
+    .get(`${import.meta.env.VITE_API_URL}/blog/${slug}`, {
       headers: {
         "Content-Type": "application/json",
       },
@@ -113,7 +113,7 @@ export const getBlogBySlug = (slug) => (dispatch) => {
 export const getBlogs = () => (dispatch) => {
   dispatch(blogSlice.actions.getBlogsStart());
   return axios
-    .get(`${process.env.REACT_APP_API_URL}/blog/get-blogs`, {
+    .get(`${import.meta.env.VITE_API_URL}/blog/get-blogs`, {
       headers: {
         "Content-Type": "application/json",
       },
@@ -129,7 +129,7 @@ export const getBlogs = () => (dispatch) => {
 export const updateBlog = (id,formData) => (dispatch) => {
   dispatch(blogSlice.actions.updateBlogStart());
   return axios
-    .put(`${process.env.REACT_APP_API_URL}/blog/update-blog/${id}`,formData,{
+    .put(`${import.meta.env.VITE_API_URL}/blog/update-blog/${id}`,formData,{
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -145,7 +145,7 @@ export const updateBlog = (id,formData) => (dispatch) => {
 export const deleteBlog = (id) => (dispatch) => {
   dispatch(blogSlice.actions.updateBlogStart());
   return axios
-    .delete(`${process.env.REACT_APP_API_URL}/blog/delete-blog/${id}`,{
+    .delete(`${import.meta.env.VITE_API_URL}/blog/delete-blog/${id}`,{
       headers: {
         "Content-Type": "application/json",
       },
