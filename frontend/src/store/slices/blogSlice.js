@@ -79,7 +79,7 @@ const blogSlice = createSlice({
 export const createBlog = (formData) => (dispatch) => {
   dispatch(blogSlice.actions.createBlogStart());
   return axios
-    .post("${process.env.REACT_APP_API_URL}/blog/create-blog", formData, {
+    .post(`${process.env.REACT_APP_API_URL}/blog/create-blog`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -113,7 +113,7 @@ export const getBlogBySlug = (slug) => (dispatch) => {
 export const getBlogs = () => (dispatch) => {
   dispatch(blogSlice.actions.getBlogsStart());
   return axios
-    .get("${process.env.REACT_APP_API_URL}/blog/get-blogs", {
+    .get(`${process.env.REACT_APP_API_URL}/blog/get-blogs`, {
       headers: {
         "Content-Type": "application/json",
       },
