@@ -29,7 +29,7 @@ const contactSlice=createSlice({
 })
 export const submitContactForm=(formData)=>(dispatch)=>{
     dispatch(contactSlice.actions.contactStart());
-    return axios.post("http://localhost:3000/api/v1/contact/contact-us",formData,{
+    return axios.post("${process.env.REACT_APP_API_URL}/contact/contact-us",formData,{
         headers:{
             "Content-Type": "application/json",
         },

@@ -30,7 +30,7 @@ const adminSlice = createSlice({
 export const adminLogin = (formData) => (dispatch) => {
   dispatch(adminSlice.actions.loginStart());
   return axios
-    .post("http://localhost:3000/api/v1/admin/login", formData, {
+    .post("${process.env.REACT_APP_API_URL}/admin/login", formData, {
       headers: {
         "Content-Type": "application/json",
       },
