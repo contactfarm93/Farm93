@@ -23,6 +23,7 @@ services:
       - farm93-network
 
   frontend:
+    build: ./frontend
     image: contactfarm/farm93-frontend:latest
     container_name: farm93-frontend
     restart: always
