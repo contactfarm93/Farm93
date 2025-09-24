@@ -1,10 +1,12 @@
 import { submitContactForm } from "@/store/slices/contactSlice";
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import Footer from "./Footer";
 
 export default function ContactUs() {
   const dispatch = useDispatch();
+  const { loading, success, error } = useSelector((state) => state.contact);
+
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -22,6 +24,17 @@ export default function ContactUs() {
     dispatch(submitContactForm(formData));
   };
 
+  useEffect(() => {
+    if (success) {
+      setFormData({
+        fullName: "",
+        email: "",
+        contactNumber: "",
+        comment: "",
+      });
+    }
+  }, [success]);
+
   return (
     <div className="bg-[#FFFAE9] min-h-screen">
       <div className="relative h-56 sm:h-72 md:h-96">
@@ -32,6 +45,7 @@ export default function ContactUs() {
           </h1>
         </div>
       </div>
+
       <section className="bg-[#fb8a3e] p-6 sm:p-12 md:p-20 rounded-b-3xl">
         <header className="max-w-4xl mx-auto text-center mb-10 px-2 sm:px-0">
           <h1 className="text-3xl sm:text-4xl font-bold text-white mb-4">
@@ -55,7 +69,6 @@ export default function ContactUs() {
               value={formData.fullName}
               onChange={handleChange}
               placeholder="Full Name"
-              aria-label="Full Name"
               required
               className="flex-1 px-4 py-3 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#fb8a3e] transition"
             />
@@ -65,7 +78,6 @@ export default function ContactUs() {
               value={formData.email}
               onChange={handleChange}
               placeholder="Email"
-              aria-label="Email"
               required
               className="flex-1 px-4 py-3 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#fb8a3e] transition"
             />
@@ -77,7 +89,6 @@ export default function ContactUs() {
             value={formData.contactNumber}
             onChange={handleChange}
             placeholder="Phone Number"
-            aria-label="Phone Number"
             required
             className="w-full px-4 py-3 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#fb8a3e] transition"
           />
@@ -88,17 +99,28 @@ export default function ContactUs() {
             onChange={handleChange}
             placeholder="Comment"
             rows={6}
-            aria-label="Comment"
             required
             className="w-full px-4 py-3 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#fb8a3e] transition resize-none"
           />
 
           <button
             type="submit"
+            disabled={loading}
             className="w-full py-3 font-semibold rounded-lg bg-[#fb8a3e] text-white transition disabled:opacity-70"
           >
-            SEND MESSAGE
+            {loading ? "Sending..." : "SEND MESSAGE"}
           </button>
+
+          {success && (
+            <p className="text-green-600 font-semibold text-center">
+              ✅ Your message has been sent successfully!
+            </p>
+          )}
+          {error && (
+            <p className="text-red-600 font-semibold text-center">
+              ❌ {error}
+            </p>
+          )}
         </form>
       </section>
 

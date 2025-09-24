@@ -1,51 +1,50 @@
-import axios from "axios"
+import axios from "axios";
 import { createSlice } from "@reduxjs/toolkit";
 
-const trainingSlice=createSlice({
-    name:"training",
-    initialState:{
-        loading: false,
-        training: null,
-        error: null,
-        success: false,
-    },
-    reducers: {
-    createTrainingStart: (state) => {
+const trainingSlice = createSlice({
+  name: "training",
+  initialState: {
+    loading: false,
+    success: false,
+    error: null,
+    data: null,
+  },
+  reducers: {
+    trainingStart: (state) => {
       state.loading = true;
       state.error = null;
       state.success = false;
     },
-    createTrainingSuccess: (state, action) => {
+    trainingSuccess: (state, action) => {
       state.loading = false;
-      state.training = action.payload;
       state.success = true;
+      state.data = action.payload;
     },
-    createTrainingFailed: (state, action) => {
+    trainingFailed: (state, action) => {
       state.loading = false;
-      state.error = action.payload;
       state.success = false;
+      state.error = action.payload;
     },
   },
-})
+});
 
-export const trainingForm=(formData)=>(dispatch)=>{
-    dispatch(trainingSlice.actions.createTrainingStart());
-    return axios.post(`${import.meta.env.VITE_API_URL}/training/train`,formData,{
-        headers:{
-            "Content-Type": "application/json",
-        },
-        withCredentials:true
+export const submitTrainingForm = (formData) => (dispatch) => {
+  dispatch(trainingSlice.actions.trainingStart());
+  return axios
+    .post("/api/v1/training/train", formData, {
+      headers: { "Content-Type": "application/json" },
+      withCredentials: true,
     })
-    .then((res)=>{
-        dispatch(trainingSlice.actions.createTrainingSuccess(res.data))
+    .then((res) => {
+      dispatch(trainingSlice.actions.trainingSuccess(res.data));
     })
     .catch((error) => {
-        dispatch(
-          trainingSlice.actions.createTrainingFailed(
-            error.response.data.message
-          )
-        );
+      dispatch(
+        trainingSlice.actions.trainingFailed(
+          error.response?.data?.message || error.message || "Something went wrong"
+        )
+      );
     });
-}
+};
 
 export default trainingSlice.reducer;

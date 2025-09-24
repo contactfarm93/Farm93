@@ -1,6 +1,11 @@
 import axios from "axios";
 import { createSlice } from "@reduxjs/toolkit";
 
+const API_BASE_URL =
+  import.meta.env.MODE === "development"
+    ? "" 
+    : import.meta.env.VITE_API_URL;
+
 const blogSlice = createSlice({
   name: "blog",
   initialState: {
@@ -76,10 +81,11 @@ const blogSlice = createSlice({
   },
 });
 
+
 export const createBlog = (formData) => (dispatch) => {
   dispatch(blogSlice.actions.createBlogStart());
   return axios
-    .post(`${import.meta.env.VITE_API_URL}/blog/create-blog`, formData, {
+    .post(`${API_BASE_URL}/api/v1/blog/create-blog`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -89,13 +95,14 @@ export const createBlog = (formData) => (dispatch) => {
       dispatch(blogSlice.actions.createBlogSuccess(res.data));
     })
     .catch((error) => {
-      dispatch(blogSlice.actions.createBlogFailed(error.response.data.message));
+      dispatch(blogSlice.actions.createBlogFailed(error.response?.data?.message || "Error"));
     });
 };
+
 export const getBlogBySlug = (slug) => (dispatch) => {
   dispatch(blogSlice.actions.getBlogBySlugStart());
   return axios
-    .get(`${import.meta.env.VITE_API_URL}/blog/${slug}`, {
+    .get(`${API_BASE_URL}/api/v1/blog/${slug}`, {
       headers: {
         "Content-Type": "application/json",
       },
@@ -105,15 +112,14 @@ export const getBlogBySlug = (slug) => (dispatch) => {
       dispatch(blogSlice.actions.getBlogBySlugSuccess(res.data));
     })
     .catch((error) => {
-      dispatch(
-        blogSlice.actions.getBlogBySlugFailed(error.response.data.message)
-      );
+      dispatch(blogSlice.actions.getBlogBySlugFailed(error.response?.data?.message || "Error"));
     });
 };
+
 export const getBlogs = () => (dispatch) => {
   dispatch(blogSlice.actions.getBlogsStart());
   return axios
-    .get(`${import.meta.env.VITE_API_URL}/blog/get-blogs`, {
+    .get(`${API_BASE_URL}/api/v1/blog/get-blogs`, {
       headers: {
         "Content-Type": "application/json",
       },
@@ -123,13 +129,14 @@ export const getBlogs = () => (dispatch) => {
       dispatch(blogSlice.actions.getBlogsSuccess(res.data));
     })
     .catch((error) => {
-      dispatch(blogSlice.actions.getBlogsFailed(error.response.data.message));
+      dispatch(blogSlice.actions.getBlogsFailed(error.response?.data?.message || "Error"));
     });
 };
-export const updateBlog = (id,formData) => (dispatch) => {
+
+export const updateBlog = (id, formData) => (dispatch) => {
   dispatch(blogSlice.actions.updateBlogStart());
   return axios
-    .put(`${import.meta.env.VITE_API_URL}/blog/update-blog/${id}`,formData,{
+    .put(`${API_BASE_URL}/api/v1/blog/update-blog/${id}`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -139,23 +146,25 @@ export const updateBlog = (id,formData) => (dispatch) => {
       dispatch(blogSlice.actions.updateBlogSuccess(res.data));
     })
     .catch((error) => {
-      dispatch(blogSlice.actions.updateBlogFailed(error.response.data.message));
+      dispatch(blogSlice.actions.updateBlogFailed(error.response?.data?.message || "Error"));
     });
 };
+
 export const deleteBlog = (id) => (dispatch) => {
-  dispatch(blogSlice.actions.updateBlogStart());
+  dispatch(blogSlice.actions.deleteBlogStart());
   return axios
-    .delete(`${import.meta.env.VITE_API_URL}/blog/delete-blog/${id}`,{
+    .delete(`${API_BASE_URL}/api/v1/blog/delete-blog/${id}`, {
       headers: {
         "Content-Type": "application/json",
       },
       withCredentials: true,
     })
     .then((res) => {
-      dispatch(blogSlice.actions.updateBlogSuccess(res.data));
+      dispatch(blogSlice.actions.deleteBlogSuccess(id));
     })
     .catch((error) => {
-      dispatch(blogSlice.actions.updateBlogFailed(error.response.data.message));
+      dispatch(blogSlice.actions.deleteBlogFailed(error.response?.data?.message || "Error"));
     });
 };
+
 export default blogSlice.reducer;

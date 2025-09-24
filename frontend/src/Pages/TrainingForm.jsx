@@ -1,9 +1,11 @@
-import { trainingForm } from "@/store/slices/trainingSlice";
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { submitTrainingForm } from "@/store/slices/trainingSlice";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function TrainingForm() {
   const dispatch = useDispatch();
+  const { loading, success, error } = useSelector((state) => state.training);
+
   const [form, setForm] = useState({
     fullName: "",
     gender: "",
@@ -17,10 +19,23 @@ export default function TrainingForm() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(trainingForm(form));
+    dispatch(submitTrainingForm(form));
   };
+
+  useEffect(() => {
+    if (success) {
+      setForm({
+        fullName: "",
+        gender: "",
+        contactNumber: "",
+        email: "",
+        address: "",
+        experienceLevel: "",
+      });
+    }
+  }, [success]);
 
   return (
     <div className="flex justify-center items-start sm:items-center bg-gradient-to-br px-4 sm:px-6 py-6 md:py-8 lg:min-h-screen">
@@ -39,8 +54,8 @@ export default function TrainingForm() {
               placeholder="Enter your full name"
               value={form.fullName}
               onChange={handleChange}
-              className="w-full p-2 sm:p-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#FA9A5C] focus:border-[#FA9A5C] transition"
               required
+              className="w-full p-2 sm:p-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#FA9A5C] focus:border-[#FA9A5C] transition"
             />
           </div>
 
@@ -52,8 +67,8 @@ export default function TrainingForm() {
               name="gender"
               value={form.gender}
               onChange={handleChange}
-              className="w-full p-2 sm:p-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#FA9A5C] focus:border-[#FA9A5C]"
               required
+              className="w-full p-2 sm:p-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#FA9A5C] focus:border-[#FA9A5C]"
             >
               <option value="">Select gender</option>
               <option value="male">Male</option>
@@ -71,8 +86,8 @@ export default function TrainingForm() {
               placeholder="Enter your phone number"
               value={form.contactNumber}
               onChange={handleChange}
-              className="w-full p-2 sm:p-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#FA9A5C] focus:border-[#FA9A5C]"
               required
+              className="w-full p-2 sm:p-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#FA9A5C] focus:border-[#FA9A5C]"
             />
           </div>
 
@@ -86,8 +101,8 @@ export default function TrainingForm() {
               placeholder="Enter your email"
               value={form.email}
               onChange={handleChange}
-              className="w-full p-2 sm:p-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#FA9A5C] focus:border-[#FA9A5C]"
               required
+              className="w-full p-2 sm:p-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#FA9A5C] focus:border-[#FA9A5C]"
             />
           </div>
 
@@ -101,8 +116,8 @@ export default function TrainingForm() {
               value={form.address}
               onChange={handleChange}
               rows="3"
-              className="w-full p-2 sm:p-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#FA9A5C] focus:border-[#FA9A5C]"
               required
+              className="w-full p-2 sm:p-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#FA9A5C] focus:border-[#FA9A5C]"
             />
           </div>
 
@@ -114,8 +129,8 @@ export default function TrainingForm() {
               name="experienceLevel"
               value={form.experienceLevel}
               onChange={handleChange}
-              className="w-full p-2 sm:p-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#FA9A5C] focus:border-[#FA9A5C]"
               required
+              className="w-full p-2 sm:p-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#FA9A5C] focus:border-[#FA9A5C]"
             >
               <option value="">Select experience</option>
               <option value="beginner">Beginner</option>
@@ -126,10 +141,22 @@ export default function TrainingForm() {
 
           <button
             type="submit"
-            className="w-full bg-[#FC873C] text-white py-2.5 sm:py-3 rounded-lg font-semibold shadow-md transform hover:scale-[1.02] transition-all duration-200"
+            disabled={loading}
+            className="w-full bg-[#FC873C] text-white py-2.5 sm:py-3 rounded-lg font-semibold shadow-md transform hover:scale-[1.02] transition-all duration-200 disabled:opacity-70"
           >
-            Submit Registration
+            {loading ? "Submitting..." : "Submit Registration"}
           </button>
+
+          {success && (
+            <p className="text-green-600 font-semibold text-center">
+              ✅ Registration successful!
+            </p>
+          )}
+          {error && (
+            <p className="text-red-600 font-semibold text-center">
+              ❌ {error}
+            </p>
+          )}
         </form>
       </div>
     </div>

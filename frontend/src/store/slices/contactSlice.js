@@ -1,16 +1,16 @@
-import axios from "axios"
+import axios from "axios";
 import { createSlice } from "@reduxjs/toolkit";
 
-const contactSlice=createSlice({
-    name:"contact",
-    initialState:{
-        loading: false,
-        success: false,
-        error: null,
-        data: null,
-    },
-    reducers:{
-        contactStart: (state) => {
+const contactSlice = createSlice({
+  name: "contact",
+  initialState: {
+    loading: false,
+    success: false,
+    error: null,
+    data: null,
+  },
+  reducers: {
+    contactStart: (state) => {
       state.loading = true;
       state.error = null;
       state.success = false;
@@ -25,26 +25,28 @@ const contactSlice=createSlice({
       state.success = false;
       state.error = action.payload;
     },
-    }
-})
-export const submitContactForm=(formData)=>(dispatch)=>{
-    dispatch(contactSlice.actions.contactStart());
-    return axios.post(`${import.meta.env.VITE_API_URL}/contact/contact-us`,formData,{
-        headers:{
-            "Content-Type": "application/json",
-        },
-        withCredentials:true
+  },
+});
+
+export const submitContactForm = (formData) => (dispatch) => {
+  dispatch(contactSlice.actions.contactStart());
+  return axios
+    .post("/api/v1/contact/contact-us", formData, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      withCredentials: true,
     })
-    .then((res)=>{
-        dispatch(contactSlice.actions.contactSuccess(res.data))
+    .then((res) => {
+      dispatch(contactSlice.actions.contactSuccess(res.data));
     })
     .catch((error) => {
-        dispatch(
-          contactSlice.actions.contactFailed(
-            error.response.data.message
-          )
-        );
+      dispatch(
+        contactSlice.actions.contactFailed(
+          error.response?.data?.message || error.message || "Something went wrong"
+        )
+      );
     });
-}
+};
 
 export default contactSlice.reducer;
